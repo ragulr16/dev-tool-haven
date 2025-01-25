@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer';
 import { format as sqlFormat } from 'sql-formatter';
-import { pd } from 'pretty-data';
+import format from 'xml-formatter';
 
 interface JWTHeader {
   alg: string;
@@ -107,8 +107,12 @@ export const tools = {
           throw new Error('Invalid XML document');
         }
 
-        // Format XML with pretty-data
-        const formatted = pd.xml(input);
+        // Format XML using xml-formatter with updated options
+        const formatted = format(input, {
+          indentation: '  ',
+          collapseContent: true,
+          lineSeparator: '\n'
+        });
 
         // Additional validation - if formatting fails or output is malformed
         if (!formatted || formatted === input) {

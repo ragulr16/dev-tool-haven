@@ -119,13 +119,10 @@ describe('Pro Tools Tests', () => {
 
     test('should handle attributes and mixed content', () => {
       const input = '<root><person id="1"><n>John</n><details type="personal">Some text <b>here</b></details></person></root>';
-      const expected = 
-        '<root>\n' +
+      const expected = '<root>\n' +
         '  <person id="1">\n' +
         '    <n>John</n>\n' +
-        '    <details type="personal">Some text \n' +
-        '      <b>here</b>\n' +
-        '    </details>\n' +
+        '    <details type="personal">Some text <b>here</b></details>\n' +
         '  </person>\n' +
         '</root>';
       expect(tools.xml.format(input)).toBe(expected);
