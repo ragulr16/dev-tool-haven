@@ -201,17 +201,25 @@ const Index = () => {
   }, [isDarkMode]);
 
   return (
-    <div className="min-h-screen bg-tool-background text-white p-8 transition-colors duration-300">
+    <div className={`min-h-screen p-8 transition-colors duration-300 ${
+      isDarkMode ? 'bg-tool-background text-white' : 'bg-white text-gray-900'
+    }`}>
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-bold text-center mb-4">Developer Tools</h1>
-            <p className="text-gray-300 text-center">All the tools you need in one place</p>
+            <p className={`text-center ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-600'
+              }`}>All the tools you need in one place</p>
           </div>
           <Button
             variant="outline"
             size="icon"
-            className="rounded-full"
+            className={`rounded-full  transition-colors ${
+              isDarkMode 
+                ? 'bg-gray-800 hover:bg-gray-700 border-gray-700' 
+                : 'bg-white hover:bg-gray-100 border-gray-200'
+            }`}
             onClick={() => setIsDarkMode(!isDarkMode)}
           >
             {isDarkMode ? (
@@ -222,20 +230,27 @@ const Index = () => {
           </Button>
         </div>
         
-        <SearchTools onSearch={setSearchQuery} />
+        <SearchTools onSearch={setSearchQuery} isDarkMode={isDarkMode} />
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTools.map(tool => (
-            <ToolCard
-              key={tool.id}
-              title={tool.title}
-              description={tool.description}
-              isPro={tool.isPro}
-              type={tool.type}
-              onFormat={tool.format}
-            />
-          ))}
-        </div>
+        {filteredTools.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredTools.map(tool => (
+              <ToolCard
+                key={tool.id}
+                title={tool.title}
+                description={tool.description}
+                isPro={tool.isPro}
+                type={tool.type}
+                onFormat={tool.format}
+                isDarkMode={isDarkMode}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-6">
+            <p className="text-gray-400 text-lg">No such tools found</p>
+          </div>
+        )}
       </div>
     </div>
   );
