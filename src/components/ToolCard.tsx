@@ -77,9 +77,14 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
       {isPro && (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <div className="absolute inset-0 rounded-lg bg-black/60 backdrop-blur-sm flex items-center justify-center flex-col gap-2 cursor-pointer">
-              <Lock className="w-8 h-8 text-tool-accent" />
-              <span className="text-white/90 font-semibold tracking-wide text-base bg-gradient-to-r from-tool-accent/90 to-purple-400/90 bg-clip-text text-transparent">Upgrade to Pro</span>
+            <div className="absolute inset-0 rounded-lg bg-black/60 backdrop-blur-sm flex items-center justify-center flex-col gap-2 cursor-pointer hover:bg-black/70 transition-all">
+              <Lock className="w-8 h-8 text-tool-accent animate-pulse" />
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-white/90 font-semibold tracking-wide text-base bg-gradient-to-r from-tool-accent via-purple-400 to-tool-accent bg-clip-text text-transparent px-3 py-1 rounded-full border border-tool-accent/20 shadow-lg backdrop-blur-sm">
+                  Upgrade to Pro
+                </span>
+                <span className="text-xs text-gray-400">Unlock Advanced Features</span>
+              </div>
             </div>
           </AlertDialogTrigger>
           <AlertDialogContent>

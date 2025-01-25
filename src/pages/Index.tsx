@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import ToolCard from '@/components/ToolCard';
 import SearchTools from '@/components/SearchTools';
+import { Moon, Sun } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const tools = [
   {
@@ -70,17 +72,42 @@ const tools = [
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isDarkMode, setIsDarkMode] = useState(true);
   
   const filteredTools = tools.filter(tool => 
     tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     tool.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  React.useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
   return (
-    <div className="min-h-screen bg-tool-background text-white p-8">
+    <div className="min-h-screen bg-tool-background text-white p-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-4">Developer Tools</h1>
-        <p className="text-gray-300 text-center mb-8">All the tools you need in one place</p>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-center mb-4">Developer Tools</h1>
+            <p className="text-gray-300 text-center">All the tools you need in one place</p>
+          </div>
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full"
+            onClick={() => setIsDarkMode(!isDarkMode)}
+          >
+            {isDarkMode ? (
+              <Sun className="h-5 w-5 text-yellow-500" />
+            ) : (
+              <Moon className="h-5 w-5 text-gray-900" />
+            )}
+          </Button>
+        </div>
         
         <SearchTools onSearch={setSearchQuery} />
         
