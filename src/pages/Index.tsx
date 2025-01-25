@@ -8,11 +8,12 @@ const tools = [
     title: "JSON Formatter",
     description: "Format and validate JSON data with syntax highlighting",
     isPro: false,
+    type: "json",
     format: (input: string) => {
       try {
         return JSON.stringify(JSON.parse(input), null, 2);
       } catch (e) {
-        return "Invalid JSON";
+        throw new Error("Invalid JSON");
       }
     }
   },
@@ -21,11 +22,12 @@ const tools = [
     title: "Base64 Encoder",
     description: "Encode and decode Base64 strings",
     isPro: false,
+    type: "base64",
     format: (input: string) => {
       try {
         return btoa(input);
       } catch (e) {
-        return "Invalid input";
+        throw new Error("Invalid input");
       }
     }
   },
@@ -34,11 +36,12 @@ const tools = [
     title: "URL Encoder",
     description: "Encode and decode URLs",
     isPro: false,
+    type: "url",
     format: (input: string) => {
       try {
         return encodeURIComponent(input);
       } catch (e) {
-        return "Invalid input";
+        throw new Error("Invalid URL");
       }
     }
   },
@@ -46,19 +49,22 @@ const tools = [
     id: 4,
     title: "JWT Decoder",
     description: "Decode and verify JWT tokens",
-    isPro: true
+    isPro: true,
+    type: "jwt"
   },
   {
     id: 5,
     title: "SQL Formatter",
     description: "Format SQL queries with proper indentation",
-    isPro: true
+    isPro: true,
+    type: "sql"
   },
   {
     id: 6,
     title: "XML Formatter",
     description: "Format XML documents with proper indentation",
-    isPro: true
+    isPro: true,
+    type: "xml"
   }
 ];
 
@@ -74,7 +80,7 @@ const Index = () => {
     <div className="min-h-screen bg-tool-background text-white p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-4">Developer Tools</h1>
-        <p className="text-gray-400 text-center mb-8">All the tools you need in one place</p>
+        <p className="text-gray-300 text-center mb-8">All the tools you need in one place</p>
         
         <SearchTools onSearch={setSearchQuery} />
         
@@ -85,6 +91,7 @@ const Index = () => {
               title={tool.title}
               description={tool.description}
               isPro={tool.isPro}
+              type={tool.type}
               onFormat={tool.format}
             />
           ))}
