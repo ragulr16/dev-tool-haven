@@ -77,25 +77,27 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
       {isPro && (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <div className="absolute inset-0 rounded-lg bg-black/60 backdrop-blur-sm flex items-center justify-center flex-col gap-2 cursor-pointer hover:bg-black/70 transition-all">
+            <div className="absolute inset-0 rounded-lg bg-black/80 backdrop-blur-md flex items-center justify-center flex-col gap-3 cursor-pointer hover:bg-black/90 transition-all">
               <Lock className="w-8 h-8 text-tool-accent animate-pulse" />
-              <div className="flex flex-col items-center gap-1">
-                <span className="text-white/90 font-semibold tracking-wide text-base bg-gradient-to-r from-tool-accent via-purple-400 to-tool-accent bg-clip-text text-transparent px-3 py-1 rounded-full border border-tool-accent/20 shadow-lg backdrop-blur-sm">
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-white font-bold tracking-wide text-lg bg-gradient-to-r from-tool-accent via-purple-400 to-tool-accent bg-clip-text text-transparent px-4 py-1.5 rounded-full border-2 border-tool-accent/30 shadow-lg shadow-tool-accent/20 backdrop-blur-md">
                   Upgrade to Pro
                 </span>
-                <span className="text-xs text-gray-400">Unlock Advanced Features</span>
+                <span className="text-sm font-medium text-gray-300 bg-black/40 px-3 py-1 rounded-full">Unlock Advanced Features</span>
               </div>
             </div>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className="bg-gray-900 border border-gray-800">
             <AlertDialogHeader>
-              <AlertDialogTitle>Unlock Pro Features</AlertDialogTitle>
-              <AlertDialogDescription>
+              <AlertDialogTitle className="text-xl font-bold bg-gradient-to-r from-tool-accent to-purple-400 bg-clip-text text-transparent">
+                Unlock Pro Features
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-300">
                 Get access to advanced tools like JWT Decoder, SQL Formatter, and more with a Pro subscription.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <Button className="bg-tool-accent hover:bg-tool-accent/80 text-white">
+              <Button className="bg-tool-accent hover:bg-tool-accent/80 text-white font-semibold">
                 Upgrade to Pro →
               </Button>
             </AlertDialogFooter>
@@ -103,11 +105,11 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
         </AlertDialog>
       )}
       
-      <div className="flex items-center gap-2 mb-2">
+      <div className="flex items-center gap-2 mb-3">
         {getIcon()}
-        <h3 className="text-xl font-semibold text-white">{title}</h3>
+        <h3 className="text-xl font-bold text-white tracking-wide">{title}</h3>
       </div>
-      <p className="text-gray-300 mb-4 text-sm">{description}</p>
+      <p className="text-gray-300 mb-5 text-sm leading-relaxed">{description}</p>
       
       <div className="space-y-4">
         <div>
@@ -115,18 +117,18 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
             placeholder="Input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className={`min-h-[100px] bg-gray-800 border-gray-700 ${error ? 'border-red-500' : ''} ${isPro ? 'opacity-50' : ''}`}
+            className={`min-h-[100px] bg-gray-900/50 border-gray-700 font-medium ${error ? 'border-red-500' : ''} ${isPro ? 'opacity-50' : ''}`}
             disabled={isPro}
           />
           {error && (
-            <p className="text-red-500 text-sm mt-1">{error}</p>
+            <p className="text-red-400 text-sm mt-1 font-medium">{error}</p>
           )}
         </div>
         
         <div className="flex gap-2">
           <Button
             onClick={handleFormat}
-            className="bg-tool-accent hover:bg-tool-accent/80 text-white"
+            className="bg-tool-accent hover:bg-tool-accent/80 text-white font-semibold shadow-lg shadow-tool-accent/20"
             disabled={isPro}
           >
             Format
@@ -134,7 +136,7 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
           <Button
             onClick={handleCopy}
             variant="outline"
-            className="border-gray-700 text-gray-300 hover:bg-gray-700"
+            className="border-gray-700 text-gray-300 hover:bg-gray-700 font-medium"
             disabled={isPro || !output}
           >
             Copy
@@ -142,7 +144,7 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
           <Button
             onClick={handleClear}
             variant="outline"
-            className="border-gray-700 text-gray-300 hover:bg-gray-700"
+            className="border-gray-700 text-gray-300 hover:bg-gray-700 font-medium"
             disabled={isPro}
           >
             Clear
@@ -153,7 +155,7 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
           placeholder="Output"
           value={output}
           readOnly
-          className={`min-h-[100px] bg-gray-800 border-gray-700 ${isPro ? 'opacity-50' : ''}`}
+          className={`min-h-[100px] bg-gray-900/50 border-gray-700 font-medium ${isPro ? 'opacity-50' : ''}`}
           disabled={isPro}
         />
       </div>
