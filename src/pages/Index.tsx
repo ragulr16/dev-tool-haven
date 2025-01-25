@@ -8,7 +8,7 @@ const tools = [
     title: "JSON Formatter",
     description: "Format and validate JSON data with syntax highlighting",
     isPro: false,
-    type: "json",
+    type: "json" as const,
     format: (input: string) => {
       try {
         return JSON.stringify(JSON.parse(input), null, 2);
@@ -22,7 +22,7 @@ const tools = [
     title: "Base64 Encoder",
     description: "Encode and decode Base64 strings",
     isPro: false,
-    type: "base64",
+    type: "base64" as const,
     format: (input: string) => {
       try {
         return btoa(input);
@@ -36,7 +36,7 @@ const tools = [
     title: "URL Encoder",
     description: "Encode and decode URLs",
     isPro: false,
-    type: "url",
+    type: "url" as const,
     format: (input: string) => {
       try {
         return encodeURIComponent(input);
@@ -50,21 +50,21 @@ const tools = [
     title: "JWT Decoder",
     description: "Decode and verify JWT tokens",
     isPro: true,
-    type: "jwt"
+    type: "jwt" as const
   },
   {
     id: 5,
     title: "SQL Formatter",
     description: "Format SQL queries with proper indentation",
     isPro: true,
-    type: "sql"
+    type: "sql" as const
   },
   {
     id: 6,
     title: "XML Formatter",
     description: "Format XML documents with proper indentation",
     isPro: true,
-    type: "xml"
+    type: "xml" as const
   }
 ];
 
