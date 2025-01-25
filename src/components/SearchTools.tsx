@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 
 interface SearchToolsProps {
   onSearch: (query: string) => void;
+  isDarkMode: boolean;
 }
 
-const SearchTools: React.FC<SearchToolsProps> = ({ onSearch }) => {
+const SearchTools: React.FC<SearchToolsProps> = ({ onSearch, isDarkMode }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
@@ -44,21 +45,33 @@ const SearchTools: React.FC<SearchToolsProps> = ({ onSearch }) => {
 
   return (
     <div className="relative w-full max-w-xl mx-auto mb-8">
-      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+      <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} w-5 h-5`}/>
       <Input
         type="text"
         placeholder="Search tools..."
         value={query}
         onChange={handleInputChange}
-        className="pl-10 bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 w-full"
+        className={`pl-10 w-full ${
+          isDarkMode 
+            ? 'bg-gray-800 border-gray-700 text-white placeholder:text-gray-400' 
+            : 'bg-white border-gray-200 text-gray-900 placeholder:text-gray-500'
+        }`}
       />
       {suggestions.length > 0 && (
-        <div className="absolute w-full mt-1 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-10">
+        <div className={`absolute w-full mt-1 border rounded-md shadow-lg z-10 ${
+          isDarkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
           {suggestions.map((suggestion, index) => (
             <Button
               key={index}
               variant="ghost"
-              className="w-full justify-start text-left text-gray-300 hover:text-white hover:bg-gray-700"
+              className={`w-full justify-start text-left ${
+                isDarkMode
+                  ? 'text-gray-300 hover:text-white hover:bg-gray-700'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+              }`}
               onClick={() => handleSuggestionClick(suggestion)}
             >
               {suggestion}

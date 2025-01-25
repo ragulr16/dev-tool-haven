@@ -25,11 +25,12 @@ interface ToolCardProps {
   title: string;
   description: string;
   isPro?: boolean;
-  onFormat?: (input: string) => Promise<FormatResult | string>;
+  onFormat;
+  isDarkMode;
   type?: 'json' | 'xml' | 'jwt' | 'sql' | 'base64' | 'url' | 'timestamp' | 'regex' | 'csv';
 }
 
-const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, onFormat, type = 'json' }) => {
+const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, onFormat, type = 'json',isDarkMode }) => {
   const [input, setInput] = React.useState('');
   const [output, setOutput] = React.useState('');
   const [error, setError] = React.useState<string | null>(null);
@@ -94,17 +95,28 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
   const isDisabled = isPro && !hasProLicense;
 
   return (
-    <div className={`relative p-6 rounded-lg backdrop-blur-xl bg-gray-800/30 border border-gray-700/50 transition-all hover:border-tool-accent/50 ${isPro && !hasProLicense ? 'pro-locked' : ''}`}>
+    <div className={`relative p-6 rounded-lg backdrop-blur-xl ${
+      isDarkMode 
+        ? `${isPro ? 'bg-gray-800/30' : 'bg-gray-800/50'} border-gray-700/50` 
+        : `${isPro ? 'bg-[#bdbcc9]' : 'bg-gray-50'} border-gray-200`
+    } border transition-all hover:border-tool-accent/50 ${isPro && !hasProLicense ? 'pro-locked' : ''}`}>
       <div className="flex items-center gap-2 mb-3">
         {getIcon()}
-        <h3 className="text-xl font-bold text-white tracking-wide">{title}</h3>
+        <h3 className={`text-xl font-bold tracking-wide ${
+          isDarkMode ? 'text-white' : 'text-gray-900'
+        }`}>{title}</h3>
       </div>
-      <p className="text-gray-300 mb-5 text-sm leading-relaxed">{description}</p>
+      <p className={`mb-5 text-sm leading-relaxed ${
+        isDarkMode ? 'text-gray-300' : 'text-gray-600'
+      }`}>{description}</p>
       
       <div className="space-y-4">
         <div>
-          <textarea
-            className="flex min-h-[80px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 border-gray-700"
+          <Textarea
+           className={`min-h-[100px] ${
+            isDarkMode ? 'bg-gray-900/50 border-gray-700' : 'bg-gray-100 border-gray-200'
+          } font-medium ${error ? 'border-red-500' : ''} ${isPro ? 'opacity-50' : ''}`}
+            // className="flex min-h-[80px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 border-gray-700"
             placeholder="Input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -130,6 +142,9 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
             onClick={handleCopy}
             disabled={isDisabled || !output}
             variant="outline"
+            className={`border-gray-700 text-gray-300 hover:bg-gray-700 font-medium ${
+              isDarkMode ? 'border-gray-700' : 'border-gray-200'
+            }`}
           >
             Copy
           </Button>
@@ -140,14 +155,20 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
               setError(null);
               setRateLimits(null);
             }}
+            className={`border-gray-700 text-gray-300 hover:bg-gray-700 font-medium ${
+              isDarkMode ? 'border-gray-700' : 'border-gray-200'
+            }`}
             disabled={isDisabled}
             variant="outline"
           >
             Clear
           </Button>
         </div>
-        <textarea
-          className="flex min-h-[80px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 border-gray-700"
+        <Textarea
+        className={`min-h-[100px] ${
+          isDarkMode ? 'bg-gray-900/50 border-gray-700' : 'bg-gray-100 border-gray-200'
+        } font-medium ${isPro ? 'opacity-50' : ''}`}
+          // className="flex min-h-[80px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 border-gray-700"
           placeholder="Output"
           value={error || output}
           readOnly
