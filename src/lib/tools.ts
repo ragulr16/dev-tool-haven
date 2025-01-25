@@ -1,5 +1,6 @@
 import { Buffer } from 'buffer';
 import { format as sqlFormat } from 'sql-formatter';
+import { pd } from 'pretty-data';
 
 interface JWTHeader {
   alg: string;
@@ -101,46 +102,20 @@ export const tools = {
           throw new Error('Invalid XML document');
         }
 
-        if (!input.includes('</') && !input.endsWith('/>')) {
+        // Basic XML validation
+        if (!input.includes('</') || !input.match(/<[^>]+>/)) {
           throw new Error('Invalid XML document');
         }
 
-        const INDENT = '  '; // 2 spaces
-        let formatted = '';
-        let indent = '';
-        let lastChar = '';
-        let inTag = false;
-        let inContent = false;
+        // Format XML with pretty-data
+        const formatted = pd.xml(input);
 
-        for (let i = 0; i < input.length; i++) {
-          const char = input[i];
-
-          if (char === '<' && input[i + 1] !== '/') {
-            if (!inContent) formatted += '\n' + indent;
-            indent += INDENT;
-            inTag = true;
-            inContent = false;
-          } else if (char === '<' && input[i + 1] === '/') {
-            indent = indent.slice(0, -2);
-            if (!inContent) formatted += '\n' + indent;
-            inTag = true;
-            inContent = false;
-          } else if (char === '>' && lastChar === '/') {
-            indent = indent.slice(0, -2);
-            inTag = false;
-          } else if (char === '>') {
-            inTag = false;
-            inContent = true;
-          } else if (!inTag && !(/\s/).test(char)) {
-            if (lastChar === '>') formatted += '\n' + indent;
-            inContent = true;
-          }
-
-          formatted += char;
-          lastChar = char;
+        // Additional validation - if formatting fails or output is malformed
+        if (!formatted || formatted === input) {
+          throw new Error('Invalid XML document');
         }
 
-        return formatted.trim();
+        return formatted;
       } catch (error) {
         console.error('[XML Formatter] Error:', error);
         throw new Error('Invalid XML document');
