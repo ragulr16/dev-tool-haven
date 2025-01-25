@@ -1,0 +1,34 @@
+# Add to existing configuration
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Content-Security-Policy = "default-src 'self' *.netlify.app; script-src 'self' 'unsafe-inline'"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[edge_functions]]
+  path = "/*"
+  function = "rate-limit"
+
+[dev]
+  command = "npm run dev"
+  targetPort = 8080
+  port = 8889
+  publish = "dist"
+  autoLaunch = true
+  framework = "#custom"
+
+[build.environment]
+  NETLIFY_DEV = "true"
+
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/pro-features/*"
+  to = "/.netlify/functions/pro-feature-gate"
+  status = 200
+  force = true
+  headers = {X-Pro-Check = "true"} 
