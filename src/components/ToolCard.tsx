@@ -39,6 +39,9 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
   const { isPro: hasProLicense } = useProLicense();
   const [rateLimits, setRateLimits] = useState<string | null>(null);
 
+  // Determine if the tool is disabled
+  const isDisabled = isPro && !hasProLicense;
+
   const getIcon = () => {
     switch (type) {
       case 'json':
@@ -61,45 +64,62 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
   };
 
   const handleFormat = async () => {
-    if (!onFormat) return;
-    
+    if (isDisabled) {
+      toast({
+        title: "Pro Feature",
+        description: "This feature requires a Pro license. Please upgrade to access it.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setError(null);
+    setIsValidating(true);
     try {
-      setError(null);
-      setIsValidating(true);
       const result = await onFormat(input);
       if (typeof result === 'string') {
         setOutput(result);
+        setRateLimits(null);
       } else {
         setOutput(result.result);
-        if (result.rateLimits) {
-          setRateLimits(result.rateLimits);
-        }
+        setRateLimits(result.rateLimits || null);
       }
-    } catch (error) {
-      console.error('Format error:', error);
-      setError('Error formatting input');
-      setOutput('');
+    } catch (err) {
+      setError(err.message || 'An error occurred while formatting');
+      toast({
+        title: "Error",
+        description: err.message || 'An error occurred while formatting',
+        variant: "destructive",
+      });
     } finally {
       setIsValidating(false);
     }
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(output);
-    toast({
-      title: "Copied!",
-      description: "Output copied to clipboard.",
+    if (isDisabled) {
+      toast({
+        title: "Pro Feature",
+        description: "This feature requires a Pro license. Please upgrade to access it.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    navigator.clipboard.writeText(output).then(() => {
+      toast({
+        title: "Copied!",
+        description: "Output copied to clipboard",
+      });
     });
   };
-
-  const isDisabled = isPro && !hasProLicense;
 
   return (
     <div className={`relative p-6 rounded-lg backdrop-blur-xl ${
       isDarkMode 
         ? `${isPro ? 'bg-gray-800/30' : 'bg-gray-800/50'} border-gray-700/50` 
         : `${isPro ? 'bg-[#bdbcc9]' : 'bg-gray-50'} border-gray-200`
-    } border transition-all hover:border-tool-accent/50 ${isPro && !hasProLicense ? 'pro-locked' : ''}`}>
+    } border transition-all hover:border-tool-accent/50 ${isDisabled ? 'pro-locked' : ''}`}>
       <div className="flex items-center gap-2 mb-3">
         {getIcon()}
         <h3 className={`text-xl font-bold tracking-wide ${
@@ -115,7 +135,7 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
           <Textarea
            className={`min-h-[100px] ${
             isDarkMode ? 'bg-gray-900/50 border-gray-700' : 'bg-gray-100 border-gray-200'
-          } font-medium ${error ? 'border-red-500' : ''} ${isPro ? 'opacity-50' : ''}`}
+          } font-medium ${error ? 'border-red-500' : ''} ${isDisabled ? 'opacity-50' : ''}`}
             // className="flex min-h-[80px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 border-gray-700"
             placeholder="Input"
             value={input}
@@ -167,7 +187,7 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
         <Textarea
         className={`min-h-[100px] ${
           isDarkMode ? 'bg-gray-900/50 border-gray-700' : 'bg-gray-100 border-gray-200'
-        } font-medium ${isPro ? 'opacity-50' : ''}`}
+        } font-medium ${isDisabled ? 'opacity-50' : ''}`}
           // className="flex min-h-[80px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 border-gray-700"
           placeholder="Output"
           value={error || output}
@@ -179,13 +199,18 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, isPro = false, 
       </div>
 
       {isPro && !hasProLicense && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm rounded-lg cursor-pointer">
-          <div className="text-center">
+        <a
+          href="https://7902599025626.gumroad.com/l/oxuok"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm rounded-lg cursor-pointer hover:bg-black/70 transition-all"
+        >
+          <div className="text-center transform hover:scale-105 transition-transform">
             <Lock className="w-8 h-8 mx-auto mb-2 text-yellow-500" />
             <h4 className="text-lg font-semibold text-white mb-1">Pro Feature</h4>
-            <p className="text-sm text-gray-300">Upgrade to Pro</p>
+            <p className="text-sm text-gray-300 hover:text-white">Upgrade to Pro</p>
           </div>
-        </div>
+        </a>
       )}
     </div>
   );

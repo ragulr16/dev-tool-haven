@@ -11,8 +11,12 @@ export async function checkProLicense(licenseKey, env) {
   try {
     const response = await fetch('https://api.gumroad.com/v2/licenses/verify', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${env.GUMROAD_ACCESS_TOKEN}`
+      },
       body: JSON.stringify({
-        product_id: env.GUMROAD_PRODUCT_ID || Deno.env.get('GUMROAD_PRODUCT_ID'),
+        product_id: env.GUMROAD_PRODUCT_ID,
         license_key: licenseKey,
       }),
     });

@@ -1,7 +1,7 @@
 import React from 'react';
-import { ThemeProvider } from '@/components/theme-provider';
-import { Toaster } from '@/components/ui/toaster';
-import { ProLicenseManager } from '@/components/ProLicenseManager';
+import { ThemeProvider } from './theme-provider';
+import { Toaster } from './ui/toaster';
+import { ProLicenseManager } from './ProLicenseManager';
 
 interface LayoutProps {
   children: React.ReactNode;

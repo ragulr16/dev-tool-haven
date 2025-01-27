@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "lib": ["es2018"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "outDir": "../../.netlify/functions",
+    "rootDir": ".",
+    "allowJs": true
+  },
+  "include": [
+    "**/*"
+  ],
+  "exclude": ["node_modules"]
+} 
