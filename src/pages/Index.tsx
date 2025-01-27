@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import ToolCard from '@/components/ToolCard';
 import SearchTools from '@/components/SearchTools';
 import { Moon, Sun } from 'lucide-react';
@@ -184,8 +185,8 @@ const tools = [
 ];
 
 const Index = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [isDarkMode, setIsDarkMode] = React.useState(true);
   
   const filteredTools = tools.filter(tool => 
     tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
